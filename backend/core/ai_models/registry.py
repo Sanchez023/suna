@@ -702,6 +702,27 @@ class ModelFactory:
             config=_create_kimi_model_config(),
         )
 
+    @staticmethod
+    def create_dashscope_model() -> Model:
+        litellm_id = "dashscope/qwen3-max"
+        return Model(
+            id="dashscope/basic",
+            name="Dashscope Basic",
+            litellm_model_id=litellm_id,
+            provider=ModelProvider.DASHSCOPE,
+            aliases=[litellm_id, "dashscope"],
+            context_window=128_000,
+            capabilities=[
+                ModelCapability.CHAT,
+                ModelCapability.FUNCTION_CALLING,
+            ],
+            pricing=PricingPresets.GPT_4O_MINI,
+            tier_availability=["free", "paid"],
+            priority=88,
+            recommended=False,
+            enabled=True,
+        ) 
+
 class ModelRegistry:
     
     def __init__(self):
@@ -736,6 +757,7 @@ class ModelRegistry:
         self.register(ModelFactory.create_minimax_m2())
         self.register(ModelFactory.create_haiku_3_5())
         self.register(ModelFactory.create_deepseek_v3())
+        self.register(ModelFactory.create_dashscope_model())
 
         if config.ENV_MODE != EnvMode.PRODUCTION:
             self.register(ModelFactory.create_test_model())
@@ -832,7 +854,7 @@ class ModelRegistry:
         if not model_id:
             return model_id
         
-        provider_prefixes = ['openrouter/', 'anthropic/', 'bedrock/', 'openai/', 'minimax/']
+        provider_prefixes = ['openrouter/', 'anthropic/', 'bedrock/', 'openai/', 'minimax/','dashscope']
         
         for prefix in provider_prefixes:
             if model_id.startswith(prefix):

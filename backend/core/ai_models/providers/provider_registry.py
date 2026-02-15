@@ -2,7 +2,7 @@ from typing import Dict, Optional, Type
 from .base import ProviderConfig, ProviderCapability
 from .anthropic import AnthropicProvider, BedrockProvider
 from .minimax import MiniMaxProvider, OpenRouterProvider
-
+from .dashscope import DashscopeProvider
 
 class ProviderRegistry:
 
@@ -17,7 +17,8 @@ class ProviderRegistry:
         self.register("minimax", MiniMaxProvider(use_openrouter=False))
         self.register("openrouter", OpenRouterProvider())
         self.register("minimax_openrouter", MiniMaxProvider(use_openrouter=True))
-    
+        self.register("dashscope", DashscopeProvider())
+
     def register(self, name: str, provider: ProviderConfig):
         self._providers[name] = provider
     
@@ -51,6 +52,9 @@ class ProviderRegistry:
         
         if model_lower.startswith("minimax/"):
             return self._providers.get("minimax")
+        
+        if model_lower.startswith("dashscope/") or "dashscope.aliyuncs.com" in model_lower:
+            return self._providers.get("dashscope")
         
         return None
     
