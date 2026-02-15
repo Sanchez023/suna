@@ -5,6 +5,7 @@
 -- 1. Create checkout_clicks table (simple version)
 -- =============================================================================
 
+
 CREATE TABLE IF NOT EXISTS checkout_clicks (
     user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     clicked_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -40,6 +41,7 @@ $$;
 -- =============================================================================
 -- 3. Update funnel RPC to include clicked_checkout
 -- =============================================================================
+DROP FUNCTION IF EXISTS get_free_signups_with_activity(TIMESTAMPTZ, TIMESTAMPTZ);
 
 CREATE OR REPLACE FUNCTION get_free_signups_with_activity(
     date_from TIMESTAMPTZ,
